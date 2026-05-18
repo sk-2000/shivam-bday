@@ -1,6 +1,30 @@
 // Make sure GSAP plugins are registered
 gsap.registerPlugin(ScrollTrigger);
 
+// --- Firebase SDK Imports ---
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
+import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
+
+// --- Firebase Configuration Placeholder ---
+const firebaseConfig = {
+  apiKey: "AIzaSyDyEGfq7SurPn7nXX8uyvxwr4bHe-1Cx1s",
+  authDomain: "shivam-bhai-bday.firebaseapp.com",
+  projectId: "shivam-bhai-bday",
+  storageBucket: "shivam-bhai-bday.firebasestorage.app",
+  messagingSenderId: "952790583999",
+  appId: "1:952790583999:web:30d7844f7838aca862940a",
+  measurementId: "G-Y862YJWCT5"
+};
+
+// Initialize Firebase
+let app, db;
+try {
+    app = initializeApp(firebaseConfig);
+    db = getFirestore(app);
+} catch (error) {
+    console.warn("Firebase initialization skipped (missing/invalid config). Paste your credentials to activate the live board.");
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     initThreeJS();
     initGSAPAnimations();
@@ -9,6 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initTiltEffect();
     initMenu();
     initCardStack();
+    initWishesBoard();
 });
 
 // --- 1. Three.js Background Particles ---
@@ -427,4 +452,98 @@ function initCardStack() {
             }
         });
     });
+}
+
+// --- 8. Anonymous Birthday Wishes Board ---
+function initWishesBoard() {
+    const form = document.getElementById('wish-form');
+    const input = document.getElementById('wish-input');
+    const grid = document.getElementById('wishes-grid');
+    const loading = document.getElementById('wishes-loading');
+
+    if (!form || !grid) return;
+
+    // 1. Form Submission
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const message = input.value.trim();
+        if(!message) return;
+
+        // Trigger local confetti burst from the send button
+        if (window.confetti) {
+            confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.8 },
+                colors: ['#00FFFF', '#FFD700', '#FFB6C1', '#B026FF']
+            });
+        }
+
+        // Clear input early for snappy UX
+        input.value = '';
+
+        try {
+            if(db && firebaseConfig.apiKey !== "") {
+                await addDoc(collection(db, "wishes"), {
+                    message: message,
+                    timestamp: serverTimestamp()
+                });
+            } else {
+                console.warn("Firestore not configured. Simulated local message sent.");
+                alert("Message captured locally! Please add Firebase credentials in app.js to enable the live backend.");
+            }
+        } catch(error) {
+            console.error("Error adding document: ", error);
+            alert("Error sending wish. Please try again or check console logs.");
+        }
+    });
+
+    // 2. Real-time Listener
+    if (db && firebaseConfig.apiKey !== "") {
+        try {
+            const q = query(collection(db, "wishes"), orderBy("timestamp", "desc"));
+            onSnapshot(q, (snapshot) => {
+                if (loading) loading.style.display = 'none';
+                
+                grid.innerHTML = ''; // Clear grid
+
+                if(snapshot.empty) {
+                    grid.innerHTML = '<div class="text-center text-gray-400 w-full col-span-full py-10">Be the first to leave a wish!</div>';
+                    return;
+                }
+
+                snapshot.forEach((doc) => {
+                    const data = doc.data();
+                    // Create Masonry Card
+                    const card = document.createElement('div');
+                    card.className = "glass-card p-6 rounded-2xl border border-white/10 hover:border-neon-cyan/50 hover:shadow-[0_0_20px_rgba(0,255,255,0.2)] transition-all break-inside-avoid mb-6 transform hover:-translate-y-1 bg-black/40 backdrop-blur-md";
+                    
+                    const quoteIcon = document.createElement('div');
+                    quoteIcon.innerHTML = `<i data-lucide="quote" class="w-6 h-6 text-neon-pink/50 mb-4"></i>`;
+                    
+                    const text = document.createElement('p');
+                    text.className = "text-white/90 text-lg leading-relaxed";
+                    text.textContent = data.message;
+                    
+                    card.appendChild(quoteIcon.firstChild);
+                    card.appendChild(text);
+                    
+                    grid.appendChild(card);
+                });
+                
+                // Re-initialize any new lucide icons that were injected
+                if(window.lucide) {
+                    lucide.createIcons();
+                }
+            }, (error) => {
+                console.error("Error listening to wishes:", error);
+                if (loading) loading.textContent = "Error connecting to Firestore database. Please check console.";
+            });
+        } catch (e) {
+            console.warn("Could not set up snapshot listener. Check config.");
+        }
+    } else {
+        if (loading) loading.textContent = "Waiting for Firebase credentials in app.js to load live wishes...";
+    }
 }

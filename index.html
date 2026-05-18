@@ -97,6 +97,9 @@
             <a href="#gratitude" class="menu-link text-white hover:text-neon-pink transition-all duration-300 flex items-center gap-4 p-3 rounded-xl hover:bg-white/10 border border-transparent hover:border-neon-pink/40 hover:shadow-[0_0_15px_rgba(255,182,193,0.3)] hover:translate-x-2">
                 <div class="p-2 rounded-lg bg-neon-pink/20"><i data-lucide="heart" class="w-5 h-5 text-neon-pink"></i></div> Gratitude
             </a>
+            <a href="#anonymous-wishes" class="menu-link text-white hover:text-neon-cyan transition-all duration-300 flex items-center gap-4 p-3 rounded-xl hover:bg-white/10 border border-transparent hover:border-neon-cyan/40 hover:shadow-[0_0_15px_rgba(0,255,255,0.3)] hover:translate-x-2">
+                <div class="p-2 rounded-lg bg-neon-cyan/20"><i data-lucide="message-circle" class="w-5 h-5 text-neon-cyan"></i></div> Live Wishes
+            </a>
         </nav>
     </div>
     
@@ -293,6 +296,47 @@
             </div>
         </section>
         
+        <!-- Anonymous Birthday Wishes Section -->
+        <section id="anonymous-wishes" class="py-24 px-4 min-h-screen flex flex-col items-center relative z-10">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-5xl font-bold text-white mb-4">Send a Wish to Shivam</h2>
+                <div class="w-24 h-1 bg-gradient-to-r from-neon-pink to-neon-cyan mx-auto rounded-full mb-4"></div>
+                <p class="text-gray-300 max-w-lg mx-auto leading-relaxed">
+                    Leave a live, anonymous birthday message for the Senior OG. It will appear on the board instantly!
+                </p>
+            </div>
+
+            <!-- Input Form -->
+            <div class="w-full max-w-2xl mb-16">
+                <form id="wish-form" class="glass-card p-6 md:p-8 rounded-3xl border border-neon-cyan/30 shadow-[0_0_30px_rgba(0,255,255,0.1)] relative group">
+                    <div class="absolute inset-0 bg-gradient-to-br from-neon-cyan/5 to-neon-purple/5 rounded-3xl pointer-events-none group-focus-within:opacity-100 opacity-50 transition-opacity"></div>
+                    <textarea 
+                        id="wish-input" 
+                        rows="4" 
+                        class="w-full bg-black/40 text-white placeholder-gray-400 rounded-2xl p-4 focus:outline-none focus:ring-2 focus:ring-neon-cyan border border-white/10 resize-none transition-all relative z-10"
+                        placeholder="Type your birthday message here..."
+                        required
+                    ></textarea>
+                    <div class="mt-4 flex justify-end relative z-10">
+                        <button type="submit" class="bg-gradient-to-r from-neon-cyan to-neon-purple text-white font-bold py-3 px-8 rounded-full hover:scale-105 transition-transform hover:shadow-[0_0_20px_rgba(0,255,255,0.5)] flex items-center gap-2">
+                            <i data-lucide="send" class="w-5 h-5"></i> Send Wish
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Live Message Board (Masonry Grid) -->
+            <div class="w-full max-w-6xl mx-auto">
+                <!-- CSS Columns for Masonry: uses columns-1 on mobile, columns-2 on md, columns-3 on lg -->
+                <div id="wishes-grid" class="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6">
+                    <!-- Loading state or empty state -->
+                    <div id="wishes-loading" class="text-center text-neon-cyan w-full col-span-full py-10 animate-pulse">
+                        Listening for live wishes...
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <footer class="py-8 text-center text-white/50 relative z-10 glass-card border-t border-white/5 rounded-t-3xl mt-10">
             <p>Made with ❤️ and deep respect for the DG Community</p>
         </footer>
@@ -312,7 +356,7 @@
         lucide.createIcons();
     </script>
     
-    <!-- Custom JS -->
-    <script src="app.js"></script>
+    <!-- Custom JS (Loaded as ES Module for Firebase) -->
+    <script type="module" src="app.js"></script>
 </body>
 </html>
