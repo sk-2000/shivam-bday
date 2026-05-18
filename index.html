@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Shivam Nagpal</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                    },
+                    colors: {
+                        cosmic: {
+                            dark: '#0B0C10',
+                            light: '#1F2833',
+                            blue: '#1A2A40'
+                        },
+                        neon: {
+                            cyan: '#00FFFF',
+                            gold: '#FFD700',
+                            pink: '#FFB6C1',
+                            purple: '#B026FF'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-cosmic-dark text-white overflow-x-hidden antialiased selection:bg-neon-pink selection:text-white">
+
+    <!-- 3D Background Canvas -->
+    <canvas id="bg-canvas" class="fixed inset-0 z-0 pointer-events-none"></canvas>
+
+    <!-- Floating Music Toggle -->
+    <button id="music-toggle" class="fixed bottom-6 right-6 z-50 p-4 rounded-full glass-card hover:scale-110 transition-transform duration-300 group shadow-[0_0_15px_rgba(0,255,255,0.3)] hover:shadow-[0_0_25px_rgba(0,255,255,0.6)] bg-black/50 backdrop-blur-xl border border-white/20">
+        <i data-lucide="music" class="w-8 h-8 text-neon-cyan group-hover:text-white transition-colors" id="music-icon"></i>
+        <!-- Audio waves animation container (hidden by default) -->
+        <div id="audio-waves" class="absolute inset-0 flex items-center justify-center gap-[3px] opacity-0 transition-opacity">
+            <div class="w-1.5 h-4 bg-neon-cyan rounded-full animate-wave delay-75"></div>
+            <div class="w-1.5 h-6 bg-neon-cyan rounded-full animate-wave delay-150"></div>
+            <div class="w-1.5 h-3 bg-neon-cyan rounded-full animate-wave delay-200"></div>
+        </div>
+    </button>
+
+    <!-- Audio Element -->
+    <audio id="bg-music" loop>
+        <source src="Crown_the_Senior_OG.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Header Navigation -->
+    <header class="fixed top-0 w-full z-50 p-4 md:p-6 flex justify-between items-center pointer-events-none">
+        <!-- Hamburger -->
+        <button id="menu-btn" class="pointer-events-auto p-2 text-white hover:text-neon-cyan transition-colors hover:scale-110">
+            <i data-lucide="menu" class="w-8 h-8"></i>
+        </button>
+        <!-- SG Logo -->
+        <a href="#hero" class="pointer-events-auto text-4xl font-black text-transparent bg-clip-text bg-gradient-to-br from-neon-gold via-white to-neon-pink drop-shadow-[0_0_15px_rgba(255,215,0,0.6)] tracking-tighter cursor-pointer hover:scale-110 transition-transform">
+            SG
+        </a>
+    </header>
+
+    <!-- Floating Left Vertical Menu -->
+    <div id="side-menu" class="fixed top-1/2 left-6 -translate-y-1/2 w-72 glass-card border border-white/20 z-[60] rounded-3xl shadow-[0_0_40px_rgba(176,38,255,0.3)] transform -translate-x-[150%] opacity-0 pointer-events-none transition-all duration-500 ease-out flex flex-col p-6 bg-black/50 backdrop-blur-xl">
+        <button id="close-menu" class="absolute top-4 right-4 p-2 text-white hover:text-neon-pink transition-colors bg-white/5 rounded-full hover:bg-white/10">
+            <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+        <div class="mb-6 mt-2 ml-2">
+            <h3 class="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-neon-cyan to-neon-purple tracking-wider uppercase">Menu</h3>
+        </div>
+        <nav class="flex flex-col gap-3 text-lg font-medium">
+            <a href="#hero" class="menu-link text-white hover:text-neon-cyan transition-all duration-300 flex items-center gap-4 p-3 rounded-xl hover:bg-white/10 border border-transparent hover:border-neon-cyan/40 hover:shadow-[0_0_15px_rgba(0,255,255,0.3)] hover:translate-x-2">
+                <div class="p-2 rounded-lg bg-neon-cyan/20"><i data-lucide="home" class="w-5 h-5 text-neon-cyan"></i></div> Home
+            </a>
+            <a href="#journey" class="menu-link text-white hover:text-neon-purple transition-all duration-300 flex items-center gap-4 p-3 rounded-xl hover:bg-white/10 border border-transparent hover:border-neon-purple/40 hover:shadow-[0_0_15px_rgba(176,38,255,0.3)] hover:translate-x-2">
+                <div class="p-2 rounded-lg bg-neon-purple/20"><i data-lucide="map" class="w-5 h-5 text-neon-purple"></i></div> The Journey
+            </a>
+            <a href="#quote" class="menu-link text-white hover:text-neon-gold transition-all duration-300 flex items-center gap-4 p-3 rounded-xl hover:bg-white/10 border border-transparent hover:border-neon-gold/40 hover:shadow-[0_0_15px_rgba(255,215,0,0.3)] hover:translate-x-2">
+                <div class="p-2 rounded-lg bg-neon-gold/20"><i data-lucide="message-square" class="w-5 h-5 text-neon-gold"></i></div> Brotherhood
+            </a>
+            <a href="#gratitude" class="menu-link text-white hover:text-neon-pink transition-all duration-300 flex items-center gap-4 p-3 rounded-xl hover:bg-white/10 border border-transparent hover:border-neon-pink/40 hover:shadow-[0_0_15px_rgba(255,182,193,0.3)] hover:translate-x-2">
+                <div class="p-2 rounded-lg bg-neon-pink/20"><i data-lucide="heart" class="w-5 h-5 text-neon-pink"></i></div> Gratitude
+            </a>
+        </nav>
+    </div>
+    
+    <!-- Menu Overlay -->
+    <div id="menu-overlay" class="fixed inset-0 bg-black/60 backdrop-blur-md z-[55] opacity-0 pointer-events-none transition-opacity duration-300"></div>
+
+    <main class="relative z-10">
+        <!-- Hero Section -->
+        <section id="hero" class="min-h-screen flex flex-col items-center justify-center relative px-4 pt-20 pb-10">
+            <div class="floating-element mb-8 relative z-10">
+                <!-- 3D looking graphic -->
+                <div class="w-32 h-32 md:w-48 md:h-48 rounded-full bg-gradient-to-tr from-neon-purple via-neon-pink to-neon-gold p-1 shadow-[0_0_40px_rgba(255,182,193,0.5)] animate-spin-slow">
+                    <div class="w-full h-full rounded-full bg-cosmic-dark flex items-center justify-center backdrop-blur-md relative overflow-hidden">
+                        <i data-lucide="crown" class="w-16 h-16 md:w-24 md:h-24 text-neon-gold"></i>
+                    </div>
+                </div>
+                <!-- Sparkles -->
+                <i data-lucide="sparkles" class="absolute -top-4 -right-4 w-8 h-8 text-neon-cyan animate-pulse pointer-events-none"></i>
+                <i data-lucide="star" class="absolute -bottom-2 -left-4 w-6 h-6 text-neon-pink animate-bounce pointer-events-none"></i>
+            </div>
+
+            <div class="text-center z-10 hero-content" data-tilt>
+                <h2 class="text-xl md:text-2xl font-semibold text-neon-cyan mb-4 tracking-widest uppercase opacity-0 translate-y-4 intro-anim">Happy Birthday to the Legend!</h2>
+                <h1 class="text-5xl md:text-7xl lg:text-8xl font-black mb-6 leading-tight opacity-0 translate-y-4 intro-anim title-glow">
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-neon-cyan via-white to-neon-pink">Shivam Nagpal</span>
+                </h1>
+                <h3 class="text-2xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-neon-gold to-neon-purple opacity-0 translate-y-4 intro-anim subtitle-glow">
+                    The Senior OG of DG Community
+                </h3>
+            </div>
+            
+            <div class="absolute bottom-10 animate-bounce opacity-100 hover:scale-110 transition-transform cursor-pointer z-50">
+                <a href="#journey" class="block">
+                    <div class="relative p-4 rounded-full bg-white/10 backdrop-blur-xl border border-white/40 shadow-[0_0_40px_rgba(255,255,255,0.6),inset_0_0_20px_rgba(255,255,255,0.4)] group overflow-hidden">
+                        <!-- Gemini Style Cosmic Glow Element -->
+                        <div class="absolute -inset-2 bg-gradient-to-r from-neon-cyan via-white to-neon-purple opacity-50 blur-lg group-hover:opacity-100 transition duration-500 animate-spin-slow"></div>
+                        <i data-lucide="chevron-down" class="relative z-10 w-8 h-8 text-white drop-shadow-[0_0_10px_white]"></i>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <!-- Journey & Gratitude Section -->
+        <section id="journey" class="py-24 px-4 md:px-8 max-w-6xl mx-auto relative z-10">
+            <div class="text-center mb-16 section-header">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4 text-white">The Journey of a Leader</h2>
+                <div class="w-24 h-1 bg-gradient-to-r from-neon-cyan to-neon-purple mx-auto rounded-full"></div>
+            </div>
+
+            <div class="relative">
+                <!-- Timeline Line -->
+                <div class="absolute left-1/2 transform -translate-x-1/2 w-1 h-full bg-gradient-to-b from-neon-cyan via-neon-purple to-transparent rounded-full hidden md:block opacity-30"></div>
+
+                <div class="space-y-16">
+                    <!-- Timeline Item 1 -->
+                    <div class="flex flex-col md:flex-row items-center justify-between w-full gs-reveal">
+                        <div class="w-full md:w-5/12 mb-8 md:mb-0">
+                            <div class="glass-card p-8 rounded-2xl border-l-4 border-neon-cyan hover-float transform transition-all hover:scale-105">
+                                <div class="flex items-center gap-4 mb-4">
+                                    <div class="p-3 rounded-lg bg-neon-cyan/20 text-neon-cyan">
+                                        <i data-lucide="play" class="w-6 h-6 fill-current"></i>
+                                    </div>
+                                    <h3 class="text-2xl font-bold text-white">The Genesis</h3>
+                                </div>
+                                <p class="text-gray-300 leading-relaxed">
+                                    From absolute ground zero—0 subscribers and 0 views. You stood as the Disciplined Head Moderator, an anchor for the "Diksha gamer YT" channel when it was just an idea.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="hidden md:flex w-2/12 justify-center">
+                            <div class="w-6 h-6 rounded-full bg-neon-cyan shadow-[0_0_15px_#00FFFF] z-10 relative">
+                                <div class="absolute inset-0 rounded-full bg-neon-cyan animate-ping opacity-50"></div>
+                            </div>
+                        </div>
+                        <div class="w-full md:w-5/12"></div>
+                    </div>
+
+                    <!-- Timeline Item 2 -->
+                    <div class="flex flex-col md:flex-row items-center justify-between w-full gs-reveal">
+                        <div class="w-full md:w-5/12 hidden md:block"></div>
+                        <div class="hidden md:flex w-2/12 justify-center">
+                            <div class="w-6 h-6 rounded-full bg-neon-purple shadow-[0_0_15px_#B026FF] z-10 relative">
+                                <div class="absolute inset-0 rounded-full bg-neon-purple animate-ping opacity-50"></div>
+                            </div>
+                        </div>
+                        <div class="w-full md:w-5/12">
+                            <div class="glass-card p-8 rounded-2xl border-r-4 border-neon-purple hover-float transform transition-all hover:scale-105">
+                                <div class="flex items-center gap-4 mb-4">
+                                    <div class="p-3 rounded-lg bg-neon-purple/20 text-neon-purple">
+                                        <i data-lucide="users" class="w-6 h-6"></i>
+                                    </div>
+                                    <h3 class="text-2xl font-bold text-white">Building the Community</h3>
+                                </div>
+                                <p class="text-gray-300 leading-relaxed">
+                                    Through unwavering dedication and disciplined leadership, you helped build a massive, thriving community. Your guidance shaped the very foundation of the DG family.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Timeline Item 3 -->
+                    <div class="flex flex-col md:flex-row items-center justify-between w-full gs-reveal">
+                        <div class="w-full md:w-5/12 mb-8 md:mb-0">
+                            <div class="glass-card p-8 rounded-2xl border-l-4 border-neon-gold hover-float transform transition-all hover:scale-105">
+                                <div class="flex items-center gap-4 mb-4">
+                                    <div class="p-3 rounded-lg bg-neon-gold/20 text-neon-gold">
+                                        <i data-lucide="shield" class="w-6 h-6"></i>
+                                    </div>
+                                    <h3 class="text-2xl font-bold text-white">The Elder Brother</h3>
+                                </div>
+                                <p class="text-gray-300 leading-relaxed">
+                                    More than a moderator, you've been a true elder brother. Providing unmatched leadership, protecting the community's ethos, and inspiring everyone around you.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="hidden md:flex w-2/12 justify-center">
+                            <div class="w-6 h-6 rounded-full bg-neon-gold shadow-[0_0_15px_#FFD700] z-10 relative">
+                                <div class="absolute inset-0 rounded-full bg-neon-gold animate-ping opacity-50"></div>
+                            </div>
+                        </div>
+                        <div class="w-full md:w-5/12"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Brotherhood Quote Card Section -->
+        <section id="quote" class="py-24 px-4 min-h-[80vh] flex items-center justify-center relative z-10 perspective-1000">
+            <div id="quote-card" class="max-w-4xl w-full mx-auto relative transform-style-3d transition-transform duration-200 ease-out">
+                <!-- Glowing backdrop -->
+                <div class="absolute -inset-1 bg-gradient-to-r from-neon-cyan via-neon-purple to-neon-pink rounded-[2rem] blur opacity-40 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-gradient-xy"></div>
+                
+                <div class="glass-card relative p-10 md:p-16 rounded-[2rem] border border-white/10 overflow-hidden">
+                    <!-- Decorative ambient light inside card -->
+                    <div class="absolute top-0 right-0 w-64 h-64 bg-neon-cyan/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+                    <div class="absolute bottom-0 left-0 w-64 h-64 bg-neon-pink/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2"></div>
+
+                    <div class="relative z-10 text-center">
+                        <i data-lucide="quote" class="w-16 h-16 mx-auto mb-8 text-neon-gold opacity-50"></i>
+                        <p class="text-3xl md:text-5xl font-light text-white leading-tight mb-10 italic">
+                            "A mentor by action, an anchor by discipline, and above all... a brother for life."
+                        </p>
+                        <div class="inline-block">
+                            <div class="h-px w-24 bg-white/30 mx-auto mb-6"></div>
+                            <h4 class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-neon-gold to-white">
+                                Happy Birthday, Senior OG
+                            </h4>
+                            <p class="text-neon-cyan mt-2 tracking-widest uppercase text-sm">We celebrate you today and always</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Interactive Gratitude Card Stack -->
+        <section id="gratitude" class="py-24 px-4 min-h-[70vh] flex flex-col items-center justify-center relative z-10 overflow-hidden">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-white mb-2">More Than Just Words</h2>
+                <p class="text-neon-cyan/80 uppercase tracking-widest text-sm">Click the cards to reveal</p>
+            </div>
+            
+            <div id="card-stack-container" class="relative w-full max-w-lg h-64 md:h-80 perspective-1000 cursor-pointer group">
+                <!-- Glowing aura behind stack -->
+                <div class="absolute inset-0 bg-gradient-to-r from-neon-gold via-neon-pink to-neon-purple blur-3xl opacity-20 group-hover:opacity-40 transition-opacity duration-500 rounded-full"></div>
+                
+                <!-- Card 1 -->
+                <div class="stack-card absolute inset-0 glass-card p-8 rounded-3xl border border-white/20 shadow-xl flex flex-col justify-center items-center text-center transform origin-bottom transition-all bg-black/60 backdrop-blur-xl">
+                    <i data-lucide="heart" class="w-10 h-10 text-neon-pink mb-4"></i>
+                    <p class="text-xl md:text-2xl text-white font-medium leading-relaxed">
+                        To the man who stood by the community when it was nothing but a dream. Thank you for being the pillar of DG.
+                    </p>
+                </div>
+                <!-- Card 2 -->
+                <div class="stack-card absolute inset-0 glass-card p-8 rounded-3xl border border-white/20 shadow-xl flex flex-col justify-center items-center text-center transform origin-bottom transition-all bg-black/60 backdrop-blur-xl">
+                    <i data-lucide="star" class="w-10 h-10 text-neon-gold mb-4"></i>
+                    <p class="text-xl md:text-2xl text-white font-medium leading-relaxed">
+                        Your discipline and leadership haven't just grown a channel; they've built a family. We owe so much to your guidance.
+                    </p>
+                </div>
+                <!-- Card 3 -->
+                <div class="stack-card absolute inset-0 glass-card p-8 rounded-3xl border border-white/20 shadow-xl flex flex-col justify-center items-center text-center transform origin-bottom transition-all bg-black/60 backdrop-blur-xl">
+                    <i data-lucide="shield-check" class="w-10 h-10 text-neon-cyan mb-4"></i>
+                    <p class="text-xl md:text-2xl text-white font-medium leading-relaxed">
+                        A true Elder Brother. Thank you for the countless hours, the unseen sacrifices, and the unwavering support.
+                    </p>
+                </div>
+                <!-- Card 4 -->
+                <div class="stack-card absolute inset-0 glass-card p-8 rounded-3xl border border-white/20 shadow-xl flex flex-col justify-center items-center text-center transform origin-bottom transition-all bg-black/60 backdrop-blur-xl">
+                    <i data-lucide="party-popper" class="w-10 h-10 text-neon-purple mb-4"></i>
+                    <p class="text-xl md:text-2xl text-white font-medium leading-relaxed">
+                        Here's to Shivam Nagpal. The Senior OG. May this year bring you as much joy as you've brought to all of us. Happy Birthday!
+                    </p>
+                </div>
+            </div>
+        </section>
+        
+        <footer class="py-8 text-center text-white/50 relative z-10 glass-card border-t border-white/5 rounded-t-3xl mt-10">
+            <p>Made with ❤️ and deep respect for the DG Community</p>
+        </footer>
+    </main>
+
+    <!-- Scripts -->
+    <!-- Three.js for Background Particles -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    
+    <!-- Initialize Icons -->
+    <script>
+        lucide.createIcons();
+    </script>
+    
+    <!-- Custom JS -->
+    <script src="app.js"></script>
+</body>
+</html>
